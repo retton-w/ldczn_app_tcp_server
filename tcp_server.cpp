@@ -772,6 +772,8 @@ int TcpServer::ProcessUpgradeApp(struct payload_req *req, char *buf)
 	FILE *fp = fopen(file_name, "w");
 	char buffer[RECV_BUF_LENGTH];
 	int rec_length = 0;
+	time_t start_time, now_time, delta_T;
+	start_time = time(&start_time);
 	while (1) {
 		bzero(buffer, RECV_BUF_LENGTH);
 		int ret = Socket::Read(clnt_sock, buffer, RECV_BUF_LENGTH, 5000);
@@ -784,8 +786,15 @@ int TcpServer::ProcessUpgradeApp(struct payload_req *req, char *buf)
 		else if(ret == -1) {
 			Debug("read sock failed");
 		}
-		if (rec_length < file_length)
+
+		now_time = time(&now_time);
+		delta_T = now_time - start_time;
+		if (delta_T > 30) { 
+			break;
+		}	
+		if (rec_length < file_length) {
 			continue;
+		}
 		fclose(fp);
 		break;
 	}
