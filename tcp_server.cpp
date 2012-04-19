@@ -792,6 +792,7 @@ int TcpServer::ProcessUpgradeApp(struct payload_req *req, char *buf)
 		if (delta_T > 30) { 
 			break;
 		}	
+
 		if (rec_length < file_length) {
 			continue;
 		}
